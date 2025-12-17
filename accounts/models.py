@@ -39,6 +39,7 @@ class JobApplication(models.Model):
         related_name="applications"
     )
     job = models.ForeignKey("jobs.Job", on_delete=models.CASCADE)
+    ats_match = models.FloatField(default=0)
     status = models.CharField(
         max_length=30,
         choices=[
@@ -49,6 +50,9 @@ class JobApplication(models.Model):
         default='pending'
     )
     applied_at = models.DateTimeField(auto_now_add=True)
+
+    def can_interview(self):
+        return self.ats_match >= 85
 
     def __str__(self):
         return f"{self.user.email} -> {self.job.title} ({self.status})"
