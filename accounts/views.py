@@ -53,7 +53,7 @@ def dashboard_view(request):
         profile = request.user.profile
     except Profile.DoesNotExist:
         return redirect('profile-setup')
-    jobs = profile.jobs.all()
+    jobs = Job.objects.filter(user=request.user)
 
     query = request.GET.get("q","")
     site_filter = request.GET.get("site","")
@@ -110,7 +110,7 @@ def profile_setup_view(request):
             for job in scraped_jobs:
                 print("SAVING:", job["title"])
                 Job.objects.create(
-                    profile=profile,
+                    user = request.user,
                     title=job["title"],
                     company=job["company_name"],
                     location=job["candidate_required_location"],
